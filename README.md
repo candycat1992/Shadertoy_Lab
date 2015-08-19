@@ -1,40 +1,62 @@
-# NPR_Lab
+# Shadertoy Lab
 
 ## Overview
 
-This project is intended to test some NPR in Unity.
+This project is intended to test shadertoy (https://www.shadertoy.com) examples in Unity.
 
-## Current NPR Labs
+## Current Labs
 
-* Antialiased Cel Shading
+### Basics
 
-	Related Scene: AntialiasedCelShadingScene
+Related Scene
 
-	Reference: http://prideout.net/blog/?p=22
+	1. SimpleCircleScene
+	2. SimpleLineScene
 
-* Tone Based Shading
+References
 
-	Related Scene: ToneBasedShadingScene
+	[1] http://blog.csdn.net/candycat1992/article/details/44244549
 
-	Reference: Gooch A, Gooch B, Shirley P, et al. A non-photorealistic lighting model for automatic technical illustration[C]//Proceedings of the 25th annual conference on Computer graphics and interactive techniques. ACM, 1998: 447-452.
+### Heart
 
-* Stylized Highlights
+Related Scene
 
-	Related Scene: StylizedHighlightsScene
+	1. HeartScene
 
-	Reference: Anjyo K, Hiramitsu K. Stylized highlights for cartoon rendering and animation[J]. Computer Graphics and Applications, IEEE, 2003, 23(4): 54-61.
+References
 
-* Pencil Sketch Shading
+	[1] https://www.shadertoy.com/view/XsfGRn
+	[2] http://blog.csdn.net/candycat1992/article/details/44040273
 
-	Related Scene: PencilSketchShadingScene
+### AntiAliasing
 
-	Reference: Lake A, Marshall C, Harris M, et al. Stylized rendering techniques for scalable real-time 3D animation[C]//Proceedings of the 1st international symposium on Non-photorealistic animation and rendering. ACM, 2000: 13-2
+Related Scene
 
-* Hatching
+	1. AntiAliasCubeScene
+	2. AntiAliasLineScene
+	3. AntiAliasPointSampleScene
 
-	Related Scene: HatchingScene
+References
 
-	Reference: Praun E, Hoppe H, Webb M, et al. Real-time hatching[C]//Proceedings of the 28th annual conference on Computer graphics and interactive techniques. ACM, 2001: 581.
+	[1] https://www.shadertoy.com/view/4ssSRl
+	[2] https://www.shadertoy.com/view/ldsSRX
+	[3] https://www.shadertoy.com/view/ldlSzS
+	[4] https://www.shadertoy.com/view/MsjSzy
+	[5] https://www.shadertoy.com/view/XtB3zw
+	[6] https://www.shadertoy.com/view/4tB3zm
+	[7] https://www.shadertoy.com/view/4t2GRm
+	[8] http://blog.csdn.net/candycat1992/article/details/44673819
+
+### Water Color
+
+Related Scene
+
+	1. WaterColorScene
+
+References
+
+	[1] https://www.shadertoy.com/view/XdSSWd
+	[2] Curtis C J, Anderson S E, Seims J E, et al. Computer-generated watercolor[C]// Proceedings of the 24th annual conference on Computer graphics and interactive techniques. ACM Press/Addison-Wesley Publishing Co., 1997.
 
 ## More Info
 
