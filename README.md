@@ -8,7 +8,7 @@ This project is intended to test shadertoy (https://www.shadertoy.com) examples 
 
 ### Basics
 
-Related Scene
+Related Scenes
 
 	1. SimpleCircleScene
 	2. SimpleLineScene
@@ -19,7 +19,7 @@ References
 
 ### Heart
 
-Related Scene
+Related Scenes
 
 	1. HeartScene
 
@@ -30,7 +30,7 @@ References
 
 ### AntiAliasing
 
-Related Scene
+Related Scenes
 
 	1. AntiAliasCubeScene
 	2. AntiAliasLineScene
@@ -49,7 +49,7 @@ References
 
 ### Water Color
 
-Related Scene
+Related Scenes
 
 	1. WaterColorScene
 

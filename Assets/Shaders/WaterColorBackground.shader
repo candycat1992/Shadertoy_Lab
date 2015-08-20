@@ -98,68 +98,159 @@
 	vec3 my_sinh(vec3 val) { vec3 e = exp(val); return (e - vec3(1.0) / e) / vec3(2.0); }
 
 	// Kubelka-Munk reflectance and transmitance model
-	void KM(vec3 k, vec3 s, float h, out vec3 refl, out vec3 trans)
-	{
-	    vec3 a = (k + s) / s;
+	void KM(vec3 K, vec3 S, float x, out vec3 R, out vec3 T) {
+	    vec3 a = (K + S) / S;
 	    vec3 b = sqrt(a * a - vec3(1.0));
-	    vec3 bsh = b * s * vec3(h);
-	    vec3 sinh_bsh = my_sinh(bsh);
-	    vec3 c = b * my_cosh(bsh) + a * sinh_bsh;
-	    refl = sinh_bsh / c;
-	    trans = b / c;
+	    vec3 bSx = b * S * vec3(x);
+	    vec3 sinh_bSx = my_sinh(bSx);
+	    vec3 c = a * sinh_bSx + b * my_cosh(bSx);
+	    
+	    R = sinh_bSx / c;
+	    T = b / c;
 	}
 	
-	// Kubelka-Munk model for layering
-	void layering(vec3 r0, vec3 t0, vec3 r1, vec3 t1, out vec3 r, out vec3 t)
-	{
-	    r = r0 + t0 * t0 * r1 / (vec3(1.0) - r0 * r1);
-	    t = t0 * t1 / (vec3(1.0) - r0 * r1);
+	// Kubelka-Munk model for optical compositing of layers
+	void CompositeLayers(vec3 R0, vec3 T0, vec3 R1, vec3 T1, out vec3 R, out vec3 T) {
+		vec3 tmp = vec3(1.0) / (vec3(1.0) - R0 * R1);
+	    R = R0 + T0 * T0 * R1 * tmp;
+	    T = T0 * T1 * tmp;
 	}
 
-	// The watercolours tends to dry first in the center
-	// and accumulate more pigment in the corners
+	// Simulate edge darkening effect
 	// Input: dist < 0 outer area, dist > 0 inner area
-	float brush_effect(float dist, float h_avg, float h_var)
-	{
-		// Only when abs(dist) < 1.0/1.0, h > 0.0
+	float BrushEffect(float dist, float x_avg, float x_var) {
+		// Only when abs(dist) < 1.0/10.0, x > 0.0
 		// Means that the edges have more thickness of pigments
-	    float h = max(0.0, 1.0 - 10.0 * abs(dist));	
-	    h *= h;
-	    h *= h;
-	    return (h_avg + h_var * h) * smoothstep(-0.01, 0.002, dist);
+	    float x = max(0.0, 1.0 - 10.0 * abs(dist));	
+	   	x *= x;
+	    x *= x;
+	    return (x_avg + x_var * x) * smoothstep(-0.01, 0.002, dist);
 	}
 	
-	// Simple 2d noise fbm with 3 octaves
-	float noise2d(vec2 p)
-	{
+	// Simple 2d noise fbm (Fractional Brownian Motion) with 3 octaves
+	float Noise2d(vec2 p) {
 	    float t = texture2D(iChannel0, p).x;
 	    t += 0.5 * texture2D(iChannel0, p * 2.0).x;
 	    t += 0.25 * texture2D(iChannel0, p * 4.0).x;
 	    return t / 1.75;
 	}
+	
+	float DistanceCircle(vec2 pos, vec2 center, float radius) {
+		return 1.0 - distance(pos, center) / radius;
+	}
+	
+	float DistanceLine(vec2 pos, vec2 point1, vec2 point2, float halfwidth) {
+    	vec2 dir0 = point2 - point1;
+		vec2 dir1 = pos - point1;
+		vec2 dir2 = dir0 * dot(dir0, dir1)/dot(dir0, dir0);
+		vec2 dir3 = dir1 - dir2;
+		float d = length(dir3);
+    	
+    	return 1 - d / halfwidth;
+    }
+    
+    float DistanceSegment(vec2 pos, vec2 point0, vec2 point1, float halfwidth) {
+	    vec2 dir0 = point1 - point0;
+	    vec2 dir1 = pos - point0;
+	    float h = clamp(dot(dir0, dir1)/dot(dir0, dir0), 0.0, 1.0);
+	    float d = length(dir1 - dir0 * h);
+	    
+	    return 1 - d / halfwidth;
+	}
+    
+    float DistanceMountain(vec2 pos, float height) {
+	    return height + 0.04 * (sin(pos.x * 18.0 + 2.0) + sin(sin(pos.x * 2.0) * 7.0)) - pos.y;
+    }
 		
 	vec4 main(vec2 fragCoord) {
 		vec2 uv = fragCoord.xy / iResolution.xy;
     
-	    vec3 r0, t0, r1, t1;
+	    vec3 R0, T0, R1, T1;
 	    
-	    float sky = 0.1 + 0.1 * noise2d(uv * vec2(0.1));
-	    KM(K_CeruleanBlue, S_CeruleanBlue, sky, r0, t0);
+	    vec2 pos;
+	    float dist;
 	    
-	    float mountain_line = 0.5+0.04*(sin(uv.x*18.0+2.0)+sin(sin(uv.x*2.0)*7.0))-uv.y;
-	    float s = clamp(2.0-10.0*abs(mountain_line),0.0,1.0);
-	    vec2 uv2 = uv + vec2(0.04*s*noise2d(uv * vec2(0.1)));
-	    float mountains = brush_effect(0.5+0.04*(sin(uv2.x*18.0+2.0)+sin(sin(uv2.x*2.0)*7.0))-uv2.y, 0.2, 0.1);
-	    mountains *= 0.85 + 0.15 * noise2d(uv*vec2(0.2));
-	    KM(K_HookersGreen, S_HookersGreen, mountains, r1, t1);
-	    layering(r0,t0,r1,t1,r0,t0);
+	    /// 
+	    /// First Scene
+	    ///
 	    
-	    vec2 uv3 = uv*vec2(1.0,iResolution.y/iResolution.x) + vec2(0.02*noise2d(uv * vec2(0.1)));
-	    float sun = brush_effect(1.0 - distance(uv3, vec2(0.2,0.45)) / 0.08, 0.2, 0.1);
-	    KM(K_HansaYellow, S_HansaYellow, sun, r1, t1);
-	    layering(r0,t0,r1,t1,r0,t0);
+//	    // Background
+//	    float background = 0.1 + 0.1 * Noise2d(uv * vec2(1.0));
+//	    KM(K_CeruleanBlue, S_CeruleanBlue, background, R0, T0);
+//	    
+//	    pos = uv + vec2(0.04 * Noise2d(uv * vec2(0.1)));
+//	    dist = DistanceMountain(pos, 0.5);
+//	    float mountains = BrushEffect(dist, 0.2, 0.3 * Noise2d(uv * vec2(0.1)));
+//	    mountains *= 0.45 + 0.55 * Noise2d(uv * vec2(0.2));
+//	    KM(K_HookersGreen, S_HookersGreen, mountains, R1, T1);
+//	    CompositeLayers(R0, T0, R1, T1, R0, T0);
+//	    
+//	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1)));
+//	    dist = DistanceCircle(pos, vec2(0.2, 0.55), 0.08);
+//	    float circle = BrushEffect(dist, 0.2, 0.2);
+//	    KM(K_HansaYellow, S_HansaYellow, circle, R1, T1);
+//	    CompositeLayers(R0, T0, R1, T1, R0, T0);
+	    
+	    /// 
+	    /// Second Scene
+	    ///
+	    
+	    // Background
+	    float background = 0.1 + 0.2 * Noise2d(uv * vec2(1.0));
+	    KM(K_HansaYellow, S_HansaYellow, background, R0, T0);
+	    
+	    // Edge roughness: 0.04
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.04 * Noise2d(uv * vec2(0.1)));
+	    dist = DistanceCircle(pos, vec2(0.5, 0.5), 0.15);
+	    // Average thickness: 0.2, edge varing thickness: 0.2
+	    float circle = BrushEffect(dist, 0.2, 0.2);
+	    // Granulation: 0.85
+	    circle *= 0.15 + 0.85 * Noise2d(uv * vec2(0.2));
+	    KM(K_CadmiumRed, S_CadmiumRed, circle, R1, T1);
+	    CompositeLayers(R0, T0, R1, T1, R0, T0);
+	    
+	    // Edge roughness: 0.03
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.03 * Noise2d(uv * vec2(0.1)));
+	    dist = DistanceCircle(pos, vec2(0.4, 0.3), 0.15);
+	    // Average thickness: 0.3, edge varing thickness: 0.1
+	    circle = BrushEffect(dist, 0.3, 0.1);
+	    // Granulation: 0.65
+	    circle *= 0.35 + 0.65 * Noise2d(uv * vec2(0.2));
+	    KM(K_HookersGreen, S_HookersGreen, circle, R1, T1);
+	    CompositeLayers(R0, T0, R1, T1, R0, T0);
+	    
+	    // Edge roughness: 0.02
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1)));
+	    dist = DistanceCircle(pos, vec2(0.6, 0.3), 0.15);
+	    // Average thickness: 0.3, edge varing thickness: 0.2
+	    circle = BrushEffect(dist, 0.3, 0.2);
+	    // Granulation: 0.45
+	    circle *= 0.55 + 0.45 * Noise2d(uv * vec2(0.2));
+	    KM(K_FrenchUltramarine, S_FrenchUltramarine, circle, R1, T1);
+	    CompositeLayers(R0, T0, R1, T1, R0, T0);
+	    
+	    // Opaque paints, e.g. Indian Red
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.3)));
+	    dist = DistanceSegment(pos, vec2(0.2, 0.1), vec2(0.4, 0.25), 0.03);
+	    float line = BrushEffect(dist, 0.2, 0.1);
+	    KM(K_IndianRed, S_IndianRed, line, R1, T1);
+	    CompositeLayers(R0, T0, R1, T1, R0, T0);
+	    
+	    // Transparent paints, e.g. Quinacridone Rose
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.2)));
+	    dist = DistanceSegment(pos, vec2(0.2, 0.5), vec2(0.4, 0.55), 0.03);
+	    line = BrushEffect(dist, 0.2, 0.1);
+	    KM(K_QuinacridoneRose, S_QuinacridoneRose, line, R1, T1);
+	    CompositeLayers(R0, T0, R1, T1, R0, T0);
+	    
+	    // Interference paints, e.g. Interference Lilac
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1)));
+	    dist = DistanceSegment(pos, vec2(0.6, 0.55), vec2(0.8, 0.4), 0.03);
+	    line = BrushEffect(dist, 0.2, 0.1);
+	    KM(K_InterferenceLilac, S_InterferenceLilac, line, R1, T1);
+	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 
-		return vec4(r0+t0,1.0);
+		return vec4(R0 + T0, 1.0);
 	}
 	
 	ENDCG
