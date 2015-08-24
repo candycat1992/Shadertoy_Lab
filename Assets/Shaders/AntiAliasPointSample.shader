@@ -1,7 +1,7 @@
 ﻿Shader "Shadertoy/AntiAlias Point Sample" { 	// https://www.shadertoy.com/view/XtB3zw
 	Properties{
 		_Aniso ("Aniso", float) = 1.0		// if you want stretchy pixels, try change this number to 0.1
-		iMouse ("Mouse Pos", Vector) = (100,100,0,0)
+		iMouse ("Mouse Pos", Vector) = (100, 100, 0, 0)
 		iChannel0("iChannel0", 2D) = "white" {}
 	}
 	  
@@ -39,7 +39,6 @@
             float4 scrPos : TEXCOORD0;   
         };              
         
-       //   precision highp float;
         v2f vert(appdata_base v) {  
         	v2f o;
         	o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
@@ -98,14 +97,14 @@
 			// sample the texture!
 			uv *= vec2(1.0, _Aniso);
 
-			float textureSize = 64.;
+			float textureSize = 64.0;
 			if (fragCoord.x<split)
 				fragColor = AntiAlias_None(uv, textureSize);	
-			else if (fragCoord.x < split * 2.)
+			else if (fragCoord.x < split * 2.0)
 				fragColor = AntiAliasPointSampleTexture_None(uv, textureSize);	
-			else if (fragCoord.x < split * 3.)
+			else if (fragCoord.x < split * 3.0)
 				fragColor = AntiAliasPointSampleTexture_Smoothstep(uv, textureSize);	
-			else if (fragCoord.x < split * 4.)
+			else if (fragCoord.x < split * 4.0)
 				fragColor = AntiAliasPointSampleTexture_Linear(uv, textureSize);	
 			else
 				fragColor = AntiAliasPointSampleTexture_ModifiedFractal(uv, textureSize);

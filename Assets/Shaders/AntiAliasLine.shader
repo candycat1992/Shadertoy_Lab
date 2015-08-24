@@ -8,7 +8,7 @@
 		_Antialias ("Antialias Factor", Range(0, 0.05)) = 0.01
 		_BackgroundColor ("Background Color", Color) = (1, 1, 1, 1)
 		
-		iMouse ("Mouse Pos", Vector) = (100,100,0,0)
+		iMouse ("Mouse Pos", Vector) = (100, 100, 0, 0)
 	}
 	  
 	CGINCLUDE    
@@ -35,9 +35,6 @@
 		#define sqrt3_divide_6 0.289
 		#define sqrt6_divide_12 0.204
 
-		const float seg = 3.0;
-		const float segwidth = 1./(2.*seg-1.);
-  		
   		float _CircleRadius;
   		float _OutlineWidth;
   		float4 _OutlineColor;
@@ -55,7 +52,6 @@
             float4 scrPos : TEXCOORD0;  
         };              
         
-       //   precision highp float;
         v2f vert(appdata_base v) {  
         	v2f o;
         	o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
@@ -113,10 +109,10 @@
 		                 	  0., 0., 0.), mat);
 		    
 		    float l = 1.5;
-		    vec3 p0 = vec3(0., 0., sqrt6_divide_12 * 3.) * l;
+		    vec3 p0 = vec3(0.0, 0.0, sqrt6_divide_12 * 3.0) * l;
 		    vec3 p1 = vec3(-0.5, -sqrt3_divide_6, -sqrt6_divide_12) * l;
 		    vec3 p2 = vec3(0.5, -sqrt3_divide_6, -sqrt6_divide_12) * l;
-		    vec3 p3 = vec3(0, sqrt3_divide_6 * 2., -sqrt6_divide_12) * l;
+		    vec3 p3 = vec3(0.0, sqrt3_divide_6 * 2.0, -sqrt6_divide_12) * l;
 		    
 		    p0 = mul(mat, p0);
 		    p1 = mul(mat, p1);
@@ -147,14 +143,14 @@
 				col = mix(_OutlineColor.rgb, col, smoothstep(-w, w, d - _OutlineWidth));
 				col = mix(_LineColor.rgb, col, smoothstep(-w, w, d));
 			} else {
-				float w = fwidth(0.5*d) * 2.0;
+				float w = fwidth(0.5 * d) * 2.0;
 				col = mix(_OutlineColor.rgb, col, smoothstep(-w, w, d - _OutlineWidth));
 				col = mix(_LineColor.rgb, col, smoothstep(-w, w, d));
 			}
 			
 			// Draw split lines
-			col = mix(vec3(0), col, smoothstep(0.005, 0.007, abs(originalPos.x - split.x)));
-			col = mix(col, vec3(0), (1 - smoothstep(0.005, 0.007, abs(originalPos.y - split.y))) * step(split.x, originalPos.x));
+			col = mix(vec3(0, 0, 0), col, smoothstep(0.005, 0.007, abs(originalPos.x - split.x)));
+			col = mix(col, vec3(0, 0, 0), (1 - smoothstep(0.005, 0.007, abs(originalPos.y - split.y))) * step(split.x, originalPos.x));
 			
 			return vec4(col, 1.0);
 		}

@@ -67,7 +67,7 @@
 			    }
 			    
 			    float w = fwidth(d) * 2.;
-			    return float4(color, 1. - smoothstep(0., w, d));
+			    return float4(color, 1.0 - smoothstep(0.0, w, d));
 			}
         	
         	float4 frag(v2f i) : COLOR0 {

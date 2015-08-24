@@ -32,11 +32,6 @@
 	        
 	        const float res = 64.0;
 			const float3 rcpRes = float3(1.0 / res, -0.5 / res, 0.5 / res);
-	        
-	        float2 magnify(float2 uv)
-			{
-				return (floor(uv) + min(frac(uv) / min(fwidth(uv), 1.0), 1.0)) * rcpRes.x + rcpRes.y;		
-			}
 
 	        fixed4 frag(v2f i) : COLOR0 { 
 	        	float texSize = 30.;

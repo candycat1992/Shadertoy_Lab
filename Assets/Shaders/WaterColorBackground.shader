@@ -93,14 +93,14 @@
 	
 
 	// Math functions not available in webgl
-	vec3 my_cosh(vec3 val) { vec3 e = exp(val); return (e + vec3(1.0) / e) / vec3(2.0); }
-	vec3 my_tanh(vec3 val) { vec3 e = exp(val); return (e - vec3(1.0) / e) / (e + vec3(1.0) / e); }
-	vec3 my_sinh(vec3 val) { vec3 e = exp(val); return (e - vec3(1.0) / e) / vec3(2.0); }
+	vec3 my_cosh(vec3 val) { vec3 e = exp(val); return (e + vec3(1.0, 1.0, 1.0) / e) / vec3(2.0, 2.0, 2.0); }
+	vec3 my_tanh(vec3 val) { vec3 e = exp(val); return (e - vec3(1.0, 1.0, 1.0) / e) / (e + vec3(1.0, 1.0, 1.0) / e); }
+	vec3 my_sinh(vec3 val) { vec3 e = exp(val); return (e - vec3(1.0, 1.0, 1.0) / e) / vec3(2.0, 2.0, 2.0); }
 
 	// Kubelka-Munk reflectance and transmitance model
 	void KM(vec3 K, vec3 S, float x, out vec3 R, out vec3 T) {
 	    vec3 a = (K + S) / S;
-	    vec3 b = sqrt(a * a - vec3(1.0));
+	    vec3 b = sqrt(a * a - vec3(1.0, 1.0, 1.0));
 	    vec3 bSx = b * S * vec3(x);
 	    vec3 sinh_bSx = my_sinh(bSx);
 	    vec3 c = a * sinh_bSx + b * my_cosh(bSx);
@@ -111,7 +111,7 @@
 	
 	// Kubelka-Munk model for optical compositing of layers
 	void CompositeLayers(vec3 R0, vec3 T0, vec3 R1, vec3 T1, out vec3 R, out vec3 T) {
-		vec3 tmp = vec3(1.0) / (vec3(1.0) - R0 * R1);
+		vec3 tmp = vec3(1.0, 1.0, 1.0) / (vec3(1.0, 1.0, 1.0) - R0 * R1);
 	    R = R0 + T0 * T0 * R1 * tmp;
 	    T = T0 * T1 * tmp;
 	}
@@ -175,17 +175,17 @@
 	    ///
 	    
 //	    // Background
-//	    float background = 0.1 + 0.1 * Noise2d(uv * vec2(1.0));
+//	    float background = 0.1 + 0.1 * Noise2d(uv * vec2(1.0, 1.0));
 //	    KM(K_CeruleanBlue, S_CeruleanBlue, background, R0, T0);
 //	    
-//	    pos = uv + vec2(0.04 * Noise2d(uv * vec2(0.1)));
+//	    pos = uv + vec2(0.04 * Noise2d(uv * vec2(0.1, 0.1)));
 //	    dist = DistanceMountain(pos, 0.5);
-//	    float mountains = BrushEffect(dist, 0.2, 0.3 * Noise2d(uv * vec2(0.1)));
-//	    mountains *= 0.45 + 0.55 * Noise2d(uv * vec2(0.2));
+//	    float mountains = BrushEffect(dist, 0.2, 0.3 * Noise2d(uv * vec2(0.1, 0.1)));
+//	    mountains *= 0.45 + 0.55 * Noise2d(uv * vec2(0.2, 0.2));
 //	    KM(K_HookersGreen, S_HookersGreen, mountains, R1, T1);
 //	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 //	    
-//	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1)));
+//	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1, 0.1)));
 //	    dist = DistanceCircle(pos, vec2(0.2, 0.55), 0.08);
 //	    float circle = BrushEffect(dist, 0.2, 0.2);
 //	    KM(K_HansaYellow, S_HansaYellow, circle, R1, T1);
@@ -196,55 +196,55 @@
 	    ///
 	    
 	    // Background
-	    float background = 0.1 + 0.2 * Noise2d(uv * vec2(1.0));
+	    float background = 0.1 + 0.2 * Noise2d(uv * vec2(1.0, 1.0));
 	    KM(K_HansaYellow, S_HansaYellow, background, R0, T0);
 	    
 	    // Edge roughness: 0.04
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.04 * Noise2d(uv * vec2(0.1)));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.04 * Noise2d(uv * vec2(0.1, 0.1)));
 	    dist = DistanceCircle(pos, vec2(0.5, 0.5), 0.15);
 	    // Average thickness: 0.2, edge varing thickness: 0.2
 	    float circle = BrushEffect(dist, 0.2, 0.2);
 	    // Granulation: 0.85
-	    circle *= 0.15 + 0.85 * Noise2d(uv * vec2(0.2));
+	    circle *= 0.15 + 0.85 * Noise2d(uv * vec2(0.2, 0.2));
 	    KM(K_CadmiumRed, S_CadmiumRed, circle, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Edge roughness: 0.03
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.03 * Noise2d(uv * vec2(0.1)));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.03 * Noise2d(uv * vec2(0.1, 0.1)));
 	    dist = DistanceCircle(pos, vec2(0.4, 0.3), 0.15);
 	    // Average thickness: 0.3, edge varing thickness: 0.1
 	    circle = BrushEffect(dist, 0.3, 0.1);
 	    // Granulation: 0.65
-	    circle *= 0.35 + 0.65 * Noise2d(uv * vec2(0.2));
+	    circle *= 0.35 + 0.65 * Noise2d(uv * vec2(0.2, 0.2));
 	    KM(K_HookersGreen, S_HookersGreen, circle, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Edge roughness: 0.02
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1)));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1, 0.1)));
 	    dist = DistanceCircle(pos, vec2(0.6, 0.3), 0.15);
 	    // Average thickness: 0.3, edge varing thickness: 0.2
 	    circle = BrushEffect(dist, 0.3, 0.2);
 	    // Granulation: 0.45
-	    circle *= 0.55 + 0.45 * Noise2d(uv * vec2(0.2));
+	    circle *= 0.55 + 0.45 * Noise2d(uv * vec2(0.2, 0.2));
 	    KM(K_FrenchUltramarine, S_FrenchUltramarine, circle, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Opaque paints, e.g. Indian Red
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.3)));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.3, 0.3)));
 	    dist = DistanceSegment(pos, vec2(0.2, 0.1), vec2(0.4, 0.25), 0.03);
 	    float line = BrushEffect(dist, 0.2, 0.1);
 	    KM(K_IndianRed, S_IndianRed, line, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Transparent paints, e.g. Quinacridone Rose
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.2)));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.2, 0.2)));
 	    dist = DistanceSegment(pos, vec2(0.2, 0.5), vec2(0.4, 0.55), 0.03);
 	    line = BrushEffect(dist, 0.2, 0.1);
 	    KM(K_QuinacridoneRose, S_QuinacridoneRose, line, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Interference paints, e.g. Interference Lilac
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1)));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1, 0.2)));
 	    dist = DistanceSegment(pos, vec2(0.6, 0.55), vec2(0.8, 0.4), 0.03);
 	    line = BrushEffect(dist, 0.2, 0.1);
 	    KM(K_InterferenceLilac, S_InterferenceLilac, line, R1, T1);

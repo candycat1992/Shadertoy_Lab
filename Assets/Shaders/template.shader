@@ -1,8 +1,8 @@
 ﻿Shader "Shadertoy/template" { 
 	Properties{
-		iMouse ("Mouse Pos", Vector) = (100,100,0,0)
+		iMouse ("Mouse Pos", Vector) = (100, 100, 0, 0)
 		iChannel0("iChannel0", 2D) = "white" {}  
-		iChannelResolution0 ("iChannelResolution0", Vector) = (100,100,0,0)
+		iChannelResolution0 ("iChannelResolution0", Vector) = (100, 100, 0, 0)
 	}
 	  
 	CGINCLUDE    
@@ -53,7 +53,7 @@
         }  
                
 		vec4 main(vec2 fragCoord) {
-			return vec4(1,1,1,1);
+			return vec4(1, 1, 1, 1);
 		}
 
     ENDCG    
