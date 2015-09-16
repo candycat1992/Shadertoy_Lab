@@ -176,17 +176,22 @@
 	    ///
 	    
 //	    // Background
-//	    float background = 0.1 + 0.1 * Noise2d(uv * vec2(1.0, 1.0));
+//		noise = Noise2d(uv * vec2(1.0, 1.0));
+//	    float background = 0.1 + 0.1 * noise;
 //	    KM(K_CeruleanBlue, S_CeruleanBlue, background, R0, T0);
 //	    
-//	    pos = uv + vec2(0.04 * Noise2d(uv * vec2(0.1, 0.1)));
+//		noise = 0.04 * Noise2d(uv * vec2(0.1, 0.1));
+//	    pos = uv + vec2(noise, noise);
 //	    dist = DistanceMountain(pos, 0.5);
-//	    float mountains = BrushEffect(dist, 0.2, 0.3 * Noise2d(uv * vec2(0.1, 0.1)));
-//	    mountains *= 0.45 + 0.55 * Noise2d(uv * vec2(0.2, 0.2));
+//		noise = 0.3 * Noise2d(uv * vec2(0.1, 0.1));
+//	    float mountains = BrushEffect(dist, 0.2, noise);
+//		noise = Noise2d(uv * vec2(0.2, 0.2));
+//	    mountains *= 0.45 + 0.55 * noise;
 //	    KM(K_HookersGreen, S_HookersGreen, mountains, R1, T1);
 //	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 //	    
-//	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1, 0.1)));
+//		noise = 0.02 * Noise2d(uv * vec2(0.1, 0.1));
+//	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 //	    dist = DistanceCircle(pos, vec2(0.2, 0.55), 0.08);
 //	    float circle = BrushEffect(dist, 0.2, 0.2);
 //	    KM(K_HansaYellow, S_HansaYellow, circle, R1, T1);
