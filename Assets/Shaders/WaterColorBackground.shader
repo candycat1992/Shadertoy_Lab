@@ -169,6 +169,7 @@
 	    
 	    vec2 pos;
 	    float dist;
+	    float noise;
 	    
 	    /// 
 	    /// First Scene
@@ -196,55 +197,65 @@
 	    ///
 	    
 	    // Background
-	    float background = 0.1 + 0.2 * Noise2d(uv * vec2(1.0, 1.0));
+	    noise = Noise2d(uv * vec2(1.0, 1.0));
+	    float background = 0.1 + 0.2 * noise;
 	    KM(K_HansaYellow, S_HansaYellow, background, R0, T0);
 	    
 	    // Edge roughness: 0.04
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.04 * Noise2d(uv * vec2(0.1, 0.1)));
+	    noise = 0.04 * Noise2d(uv * vec2(0.1, 0.1));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceCircle(pos, vec2(0.5, 0.5), 0.15);
 	    // Average thickness: 0.2, edge varing thickness: 0.2
 	    float circle = BrushEffect(dist, 0.2, 0.2);
 	    // Granulation: 0.85
-	    circle *= 0.15 + 0.85 * Noise2d(uv * vec2(0.2, 0.2));
+	    noise = Noise2d(uv * vec2(0.2, 0.2));
+	    circle *= 0.15 + 0.85 * noise;
 	    KM(K_CadmiumRed, S_CadmiumRed, circle, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Edge roughness: 0.03
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.03 * Noise2d(uv * vec2(0.1, 0.1)));
+	    noise = 0.03 * Noise2d(uv * vec2(0.1, 0.1));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceCircle(pos, vec2(0.4, 0.3), 0.15);
 	    // Average thickness: 0.3, edge varing thickness: 0.1
 	    circle = BrushEffect(dist, 0.3, 0.1);
 	    // Granulation: 0.65
-	    circle *= 0.35 + 0.65 * Noise2d(uv * vec2(0.2, 0.2));
+	    noise = Noise2d(uv * vec2(0.2, 0.2));
+	    circle *= 0.35 + 0.65 * noise;
 	    KM(K_HookersGreen, S_HookersGreen, circle, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Edge roughness: 0.02
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1, 0.1)));
+	    noise = 0.02 * Noise2d(uv * vec2(0.1, 0.1));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceCircle(pos, vec2(0.6, 0.3), 0.15);
 	    // Average thickness: 0.3, edge varing thickness: 0.2
 	    circle = BrushEffect(dist, 0.3, 0.2);
 	    // Granulation: 0.45
-	    circle *= 0.55 + 0.45 * Noise2d(uv * vec2(0.2, 0.2));
+	    noise = Noise2d(uv * vec2(0.2, 0.2));
+	    circle *= 0.55 + 0.45 * noise;
 	    KM(K_FrenchUltramarine, S_FrenchUltramarine, circle, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Opaque paints, e.g. Indian Red
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.3, 0.3)));
+	    noise = 0.02 * Noise2d(uv * vec2(0.3, 0.3));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceSegment(pos, vec2(0.2, 0.1), vec2(0.4, 0.25), 0.03);
 	    float line = BrushEffect(dist, 0.2, 0.1);
 	    KM(K_IndianRed, S_IndianRed, line, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Transparent paints, e.g. Quinacridone Rose
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.2, 0.2)));
+	    noise = 0.02 * Noise2d(uv * vec2(0.2, 0.2));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceSegment(pos, vec2(0.2, 0.5), vec2(0.4, 0.55), 0.03);
 	    line = BrushEffect(dist, 0.2, 0.1);
 	    KM(K_QuinacridoneRose, S_QuinacridoneRose, line, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Interference paints, e.g. Interference Lilac
-	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(0.02 * Noise2d(uv * vec2(0.1, 0.2)));
+	    noise = 0.02 * Noise2d(uv * vec2(0.1, 0.2));
+	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceSegment(pos, vec2(0.6, 0.55), vec2(0.8, 0.4), 0.03);
 	    line = BrushEffect(dist, 0.2, 0.1);
 	    KM(K_InterferenceLilac, S_InterferenceLilac, line, R1, T1);
