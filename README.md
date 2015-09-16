@@ -4,6 +4,10 @@
 
 This project is intended to test shadertoy (https://www.shadertoy.com) examples in Unity.
 
+## Unity Version
+
+Unity 5.1.0 Personal
+
 ## Current Labs
 
 ### Basics

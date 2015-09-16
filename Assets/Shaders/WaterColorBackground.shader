@@ -101,7 +101,7 @@
 	void KM(vec3 K, vec3 S, float x, out vec3 R, out vec3 T) {
 	    vec3 a = (K + S) / S;
 	    vec3 b = sqrt(a * a - vec3(1.0, 1.0, 1.0));
-	    vec3 bSx = b * S * vec3(x);
+	    vec3 bSx = b * S * vec3(x, x, x);
 	    vec3 sinh_bSx = my_sinh(bSx);
 	    vec3 c = a * sinh_bSx + b * my_cosh(bSx);
 	    
