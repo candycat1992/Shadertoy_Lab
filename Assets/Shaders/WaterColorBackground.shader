@@ -246,24 +246,24 @@
 	    noise = 0.02 * Noise2d(uv * vec2(0.3, 0.3));
 	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceSegment(pos, vec2(0.2, 0.1), vec2(0.4, 0.25), 0.03);
-	    float line = BrushEffect(dist, 0.2, 0.1);
-	    KM(K_IndianRed, S_IndianRed, line, R1, T1);
+	    float stroke = BrushEffect(dist, 0.2, 0.1);
+	    KM(K_IndianRed, S_IndianRed, stroke, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Transparent paints, e.g. Quinacridone Rose
 	    noise = 0.02 * Noise2d(uv * vec2(0.2, 0.2));
 	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceSegment(pos, vec2(0.2, 0.5), vec2(0.4, 0.55), 0.03);
-	    line = BrushEffect(dist, 0.2, 0.1);
-	    KM(K_QuinacridoneRose, S_QuinacridoneRose, line, R1, T1);
+	    stroke = BrushEffect(dist, 0.2, 0.1);
+	    KM(K_QuinacridoneRose, S_QuinacridoneRose, stroke, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 	    
 	    // Interference paints, e.g. Interference Lilac
 	    noise = 0.02 * Noise2d(uv * vec2(0.1, 0.2));
 	    pos = uv * vec2(1.0, iResolution.y / iResolution.x) + vec2(noise, noise);
 	    dist = DistanceSegment(pos, vec2(0.6, 0.55), vec2(0.8, 0.4), 0.03);
-	    line = BrushEffect(dist, 0.2, 0.1);
-	    KM(K_InterferenceLilac, S_InterferenceLilac, line, R1, T1);
+	    stroke = BrushEffect(dist, 0.2, 0.1);
+	    KM(K_InterferenceLilac, S_InterferenceLilac, stroke, R1, T1);
 	    CompositeLayers(R0, T0, R1, T1, R0, T0);
 
 		return vec4(R0 + T0, 1.0);
