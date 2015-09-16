@@ -66,14 +66,14 @@
         	return main(gl_FragCoord);
         }  
         
-        float line(vec2 pos, vec2 point1, vec2 point2, float width) {   		
+        float Line(vec2 pos, vec2 point1, vec2 point2, float width) {   		
     		vec2 dir0 = point2 - point1;
 			vec2 dir1 = pos - point1;
 			float h = clamp(dot(dir0, dir1)/dot(dir0, dir0), 0.0, 1.0);
 			return (length(dir1 - dir0 * h) - width * 0.5);
         }
         
-        float circle(vec2 pos, vec2 center, float radius) {
+        float Circle(vec2 pos, vec2 center, float radius) {
         	float d = length(pos - center) - radius;
         	return d;
         }
@@ -124,16 +124,16 @@
 		    vec2 point2 = p2.xy;
 		    vec2 point3 = p3.xy;
 			
-			float d = line(pos, point0, point1, _LineWidth);
-			d = min(d, line(pos, point1, point2, _LineWidth));
-			d = min(d, line(pos, point2, point3, _LineWidth));
-			d = min(d, line(pos, point0, point2, _LineWidth));
-			d = min(d, line(pos, point0, point3, _LineWidth));
-			d = min(d, line(pos, point1, point3, _LineWidth));
-			d = min(d, circle(pos, point0, _CircleRadius));
-			d = min(d, circle(pos, point1, _CircleRadius));
-			d = min(d, circle(pos, point2, _CircleRadius));
-			d = min(d, circle(pos, point3, _CircleRadius));	
+			float d = Line(pos, point0, point1, _LineWidth);
+			d = min(d, Line(pos, point1, point2, _LineWidth));
+			d = min(d, Line(pos, point2, point3, _LineWidth));
+			d = min(d, Line(pos, point0, point2, _LineWidth));
+			d = min(d, Line(pos, point0, point3, _LineWidth));
+			d = min(d, Line(pos, point1, point3, _LineWidth));
+			d = min(d, Circle(pos, point0, _CircleRadius));
+			d = min(d, Circle(pos, point1, _CircleRadius));
+			d = min(d, Circle(pos, point2, _CircleRadius));
+			d = min(d, Circle(pos, point3, _CircleRadius));	
 			
 			if (originalPos.x < split.x) {
 				col = mix(_OutlineColor.rgb, col, step(0, d - _OutlineWidth));
