@@ -45,7 +45,7 @@
         	    return o;    
         	}  
         	
-        	float line(float2 pos, float2 point0, float2 point1, float halfwidth) {
+        	float Line(float2 pos, float2 point0, float2 point1, float halfwidth) {
 			    float2 dir0 = point1 - point0;
 			    float2 dir1 = pos - point0;
 			    float h = clamp(dot(dir0, dir1)/dot(dir0, dir0), 0., 1.);
@@ -59,14 +59,14 @@
 			    float seg = floor(dist / dotlineInterval);
 			    float2 prevPos = end + (0.0 * dotlineInterval) * dir;
 			    float2 nextPos = end + (0.2 * dotlineInterval) * dir;
-			    float d = line(pos, prevPos, nextPos, halfLineWidth);
+			    float d = Line(pos, prevPos, nextPos, halfLineWidth);
 			    for (float i = 1.; i < seg; i += 1.0) {
 			        prevPos = end + ((i - 0.2)  * dotlineInterval) * dir;
 			        nextPos = end + ((i + 0.2)  * dotlineInterval) * dir;
-			        d = min(d, line(pos, prevPos, nextPos, halfLineWidth));
+			        d = min(d, Line(pos, prevPos, nextPos, halfLineWidth));
 			    }
 			    
-			    float w = fwidth(d) * 2.;
+			    float w = fwidth(d) * 2.0;
 			    return float4(color, 1.0 - smoothstep(0.0, w, d));
 			}
         	

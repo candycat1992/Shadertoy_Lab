@@ -59,7 +59,7 @@
         	return main(gl_FragCoord);
         }  
         
-        vec4 line(vec2 pos, vec2 point1, vec2 point2, float width, float3 color, float antialias) {
+        vec4 Line(vec2 pos, vec2 point1, vec2 point2, float width, float3 color, float antialias) {
 //        	float k = (point1.y - point2.y)/(point1.x - point2.x);
 //    		float b = point1.y - k * point1.x;
 //    		
@@ -76,7 +76,7 @@
         	return vec4(color, 1.0 - t);
         }
         
-        vec4 circle(vec2 pos, vec2 center, float radius, float3 color, float antialias) {
+        vec4 Circle(vec2 pos, vec2 center, float radius, float3 color, float antialias) {
         	float d = length(pos - center) - radius;
         	float t = smoothstep(0, antialias, d);
         	return vec4(color, 1.0 - t);
@@ -89,9 +89,9 @@
 			vec2 point2 = vec2(0.7, 0.8) * iResolution.xy;
 			
 			vec4 layer1 = vec4(_BackgroundColor.rgb, 1.0);
-			vec4 layer2 = line(pos, point1, point2, _LineWidth, _LineColor.rgb, _Antialias);
-			vec4 layer3 =  circle(pos, point1, _CircleRadius, _CircleColor.rgb, _Antialias);
-			vec4 layer4 =  circle(pos, point2, _CircleRadius, _CircleColor.rgb, _Antialias);
+			vec4 layer2 = Line(pos, point1, point2, _LineWidth, _LineColor.rgb, _Antialias);
+			vec4 layer3 =  Circle(pos, point1, _CircleRadius, _CircleColor.rgb, _Antialias);
+			vec4 layer4 =  Circle(pos, point2, _CircleRadius, _CircleColor.rgb, _Antialias);
 			
 			vec4 fragColor = mix(layer1, layer2, layer2.a);
 			fragColor = mix(fragColor, layer3, layer3.a);

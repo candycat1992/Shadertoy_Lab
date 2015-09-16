@@ -52,7 +52,7 @@
         	return main(gl_FragCoord);
         }  
         
-        vec4 circle(vec2 pos, vec2 center, float radius, float3 color, float antialias) {
+        vec4 Circle(vec2 pos, vec2 center, float radius, float3 color, float antialias) {
         	float d = length(pos - center) - radius;
         	float t = smoothstep(0, antialias, d);
         	return vec4(color, 1.0 - t);
@@ -62,7 +62,7 @@
 			vec2 pos = fragCoord; // pos.x ~ (0, iResolution.x), pos.y ~ (0, iResolution.y)
 
 			vec4 layer1 = vec4(_BackgroundColor.rgb, 1.0);
-			vec4 layer2 = circle(pos, _Parameters.xy * iResolution.xy, _Parameters.z, _CircleColor.rgb, _Parameters.w);
+			vec4 layer2 = Circle(pos, _Parameters.xy * iResolution.xy, _Parameters.z, _CircleColor.rgb, _Parameters.w);
 			
 			return mix(layer1, layer2, layer2.a);
 		}

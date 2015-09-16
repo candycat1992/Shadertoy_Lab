@@ -57,47 +57,51 @@
     		return texture2D(iChannel0, uv / texsize);
 		}
 		
-		vec4 AntiAliasPointSampleTexture_None(vec2 uv, vec2 texsize) {	
-			return texture2D(iChannel0, (floor(uv+0.5) + 0.5) / texsize);
+		vec4 AntiAliasPointSampleTexture_None(vec2 uv, vec2 texsize) {
+			vec2 texUV = (floor(uv + vec2(0.5, 0.5)) + vec2(0.5, 0.5)) / texsize;
+			return texture2D(iChannel0, texUV);
 		}
 
 		vec4 AntiAliasPointSampleTexture_Smoothstep(vec2 uv, vec2 texsize) {	
-			vec2 w=fwidth(uv);
-			return texture2D(iChannel0, (floor(uv)+0.5+smoothstep(0.5-w,0.5+w,fract(uv))) / texsize);	
+			vec2 w = fwidth(uv);
+			vec2 texUV = (floor(uv) + vec2(0.5, 0.5) + smoothstep(vec2(0.5, 0.5) - w, vec2(0.5, 0.5) + w, fract(uv))) / texsize;
+			return texture2D(iChannel0, texUV);	
 		}
 
 		vec4 AntiAliasPointSampleTexture_Linear(vec2 uv, vec2 texsize) {	
-			vec2 w=fwidth(uv);
-			return texture2D(iChannel0, (floor(uv)+0.5+clamp((fract(uv)-0.5+w)/w,0.,1.)) / texsize);	
+			vec2 w = fwidth(uv);
+			vec2 texUV = (floor(uv) + vec2(0.5, 0.5) + clamp((fract(uv) - vec2(0.5, 0.5) + w) / w, vec2(0.0, 0.0), vec2(1.0, 1.0))) / texsize;
+			return texture2D(iChannel0, texUV);	
 		}
 
 		vec4 AntiAliasPointSampleTexture_ModifiedFractal(vec2 uv, vec2 texsize) {	
-    		uv.xy -= 0.5;
-			vec2 w=fwidth(uv);
-			return texture2D(iChannel0, (floor(uv)+0.5+min(fract(uv)/min(w,1.0),1.0)) / texsize);
+    		uv.xy -= vec2(0.5, 0.5);
+			vec2 w = fwidth(uv);
+			vec2 texUV = (floor(uv) + vec2(0.5, 0.5) + min(fract(uv) / min(w, vec2(1.0, 1.0)), vec2(1.0, 1.0))) / texsize;
+			return texture2D(iChannel0, texUV);
 		}
 			
 		vec4 main(vec2 fragCoord)
 		{
 			vec4 fragColor;
 			
-			float split=floor(iResolution.x/5.);
+			float split=floor(iResolution.x / 5.0);
 
 			vec2 uv = fragCoord.xy;
 			
-			if (floor(uv.x) == split || floor(uv.x) == split * 2. || floor(uv.x) == split * 3. || floor(uv.x) == split * 4.) { 
-        		fragColor=vec4(1.); 
+			if (floor(uv.x) == split || floor(uv.x) == split * 2.0 || floor(uv.x) == split * 3.0 || floor(uv.x) == split * 4.0) { 
+        		fragColor=vec4(1, 1, 1, 1); 
         		return fragColor; 
     		}
 			
 			// rotate the uv with time		
 			float c = cos(iGlobalTime * 0.01), s = sin(iGlobalTime * 0.01);
-			uv = mul(uv, mat2(c,s,-s,c)*0.05);	
+			uv = mul(uv, mat2(c, s, -s, c) * 0.05);	
 			
 			// sample the texture!
 			uv *= vec2(1.0, _Aniso);
 
-			float textureSize = 64.0;
+			vec2 textureSize = vec2(64.0, 64.0);
 			if (fragCoord.x<split)
 				fragColor = AntiAlias_None(uv, textureSize);	
 			else if (fragCoord.x < split * 2.0)
