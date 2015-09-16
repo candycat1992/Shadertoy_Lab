@@ -29,11 +29,11 @@
 	        	o.scrPos = ComputeScreenPos(o.pos);  
 	            return o;    
 	        }
-	        
-	        const float res = 64.0;
-			const float3 rcpRes = float3(1.0 / res, -0.5 / res, 0.5 / res);
 
-	        fixed4 frag(v2f i) : COLOR0 { 
+	        fixed4 frag(v2f i) : COLOR0 {
+ //             float res = 64.0;
+ //             float3 rcpRes = float3(1.0 / res, -0.5 / res, 0.5 / res);
+
 	        	float texSize = 30.;
 	        	float2 fragCoord = ((i.scrPos.xy/i.scrPos.w));
 					
