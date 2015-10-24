@@ -62,6 +62,17 @@ References
 	[1] https://www.shadertoy.com/view/XdSSWd
 	[2] Curtis C J, Anderson S E, Seims J E, et al. Computer-generated watercolor[C]// Proceedings of the 24th annual conference on Computer graphics and interactive techniques. ACM Press/Addison-Wesley Publishing Co., 1997.
 
+### Umbrella
+
+Related Scenes
+
+	1. UmbrellaScene
+
+References
+
+	[1] https://www.shadertoy.com/view/4t2SRh
+	[2] http://blog.csdn.net/candycat1992/article/details/49389905
+
 ## More Info
 
 For more information, please visit http://blog.csdn.net/candycat1992.
